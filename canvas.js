@@ -1,38 +1,54 @@
-var svg = document.getElementById("thing");
+var svgImage = document.getElementById("svgImage");
+var clear_button = document.getElementById("clear");
+var mousex, mousey;
 
-var lastX, lastY;
+svgImage.addEventListener("mousemove", function(e) {
+    mousex = e.offsetX;
+    mousey = e.offsetY;
+});
+
+var addDot = function(e){
+    if (svgImage.hasChildNodes()){
+	var startx = svgImage.lastChild.getAttribute("cx");
+	var starty = svgImage.lastChild.getAttribute("cy");
+	var c = document.createElementNS("http://www.w3.org/2000/svg", "line");
+	c.setAttribute("x1", startx);
+	c.setAttribute("y1", starty);
+	c.setAttribute("x2", mousex);
+	c.setAttribute("y2", mousey);
+	c.setAttribute("style", "stroke: #000000;stroke-width:2");
+	document.getElementById("svgImage").appendChild(c);
+	addCircle(e);
+    }
+    else{
+	addCircle(e);
+    }
+}
 
 var addCircle = function(e){
-    console.log("grov");
-    var X = e.offsetX;
-    var Y = e.offsetY;
-
+    var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     
+    c.setAttribute("cx", mousex.toString());
     
-    var dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-
-    dot.setAttribute("cx", X.toString());
-    dot.setAttribute("cy", Y.toString());
-    dot.setAttribute("r", "25");
-    dot.setAttribute("fill", "green");
-    svg.appendChild(dot);
-    /*
-    canvas.lineTo(X,Y);
-    canvas.stroke();
-    canvas.beginPath();
-    canvas.arc(X, Y, 10, 0, 2 * Math.PI);
-    canvas.fill();
-    canvas.moveTo(X,Y);
-    */
+    c.setAttribute("cy", mousey.toString());
+    
+    c.setAttribute("r", "20");
+    
+    c.setAttribute("fill", "black");
+    
+    document.getElementById("svgImage").appendChild(c);
 }
+
+
 
 var clear_screen = function(e){
-    var sVg = document.getElementById('thing');
-    document.body.removeChild(sVg)
+    while (svgImage.hasChildNodes()){
+	svgImage.removeChild(svgImage.lastChild);
+    }
 }
 
-var canvas = document.getElementById("thing");
-canvas.addEventListener("click", addCircle);
 
-var clear_button = document.getElementById("clear");
+svgImage.addEventListener("click", addDot);
+
+
 clear_button.addEventListener("click", clear_screen);
